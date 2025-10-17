@@ -29,13 +29,14 @@ pipeline {
                     for (int i = 1; i < lines.size(); i++) {
                         def columns = lines[i].split(",")
 
-                        def id   = columns[0].trim()
-                        def name = columns[1].trim()
-                        def age  = columns[2].trim()
+                        def country   = columns[0].trim()
+                        def Capital = columns[1].trim()
+                        def Population  = columns[2].trim()
+                        def Area = columns[3].trim()
 
                         def query = """
-                            INSERT INTO health.population (Id, Name, Age)
-                            VALUES (${id}, '${name}', ${age});
+                            INSERT INTO health.population (country, Capital, Population,Area)
+                            VALUES (${country}, ${Capital}, ${Population},${Area});
                         """
 
                         bat """
