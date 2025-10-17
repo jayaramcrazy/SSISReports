@@ -3,7 +3,7 @@ pipeline {
     environment {
         SQLSERVER = "JAYARAM\\DEVELOPER1"
         DATABASE  = "ErrorBD"
-        CSV_DIR   = "D:\\SSISGitReports\\reports\\csvfile"
+        CSV_DIR   = "csvfile/*.csv"
         login = 'JaiLogin'
         pwd = 'Jayaram@300'
     }
@@ -18,7 +18,7 @@ pipeline {
         stage('Insert CSV into SQL Server') {
             steps {
                 script {
-                    def files = findFiles(glob: "${env.CSV_DIR}/*.csv")
+                    def files = findFiles(glob: "${env.CSV_DIR}")
                     if (files.length == 0) {
                         echo " No CSV files found in ${env.CSV_DIR}"
                         error "No files to process"
