@@ -3,7 +3,7 @@ pipeline{
     environment{
         SQLSERVER = "DEVELOPER1"
         DATABASE = "ErrorDB"
-        CSV_DIR = "./"
+        CSV_DIR = readFile('Population.csv').trim()
     }
     stages{
         stage('checkout code from github'){
