@@ -17,7 +17,7 @@ pipeline {
             steps {
                 script {
                     // Locate the CSV file in the repo
-                    def csvFile = findFiles(global: "csvfile/Population.csv")
+                    def csvFile = findFiles(glob: "csvfile/Population.csv")
 
                     if (!csvFile.exists()) {
                         error "❌ CSV file not found at ${csvFile}"
