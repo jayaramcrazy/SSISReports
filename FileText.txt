@@ -3,7 +3,7 @@ pipeline {
     environment {
         SQLSERVER = "JAYARAM\\DEVELOPER1"
         DATABASE  = "ErrorBD"
-        CSV_DIR   = "csvfile/Population.csv"
+        CSV_DIR   = "csvfile/*.csv"
         login = 'JaiLogin'
         pwd = 'Jayaram@300'
     }
