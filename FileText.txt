@@ -40,8 +40,8 @@ pipeline {
                         def escapedQuery = bulkInsertQuery.replace('"', '\\"').replace('\n', ' ')
 
                         echo "Executing query: ${escapedQuery}"
-
                         bat """
+                        copy csvfile\\Population1.csv C:\\Temp\\Population1.csv
                         sqlcmd -S ${env.SQLSERVER} -d ${env.DATABASE} -U ${env.login} -P ${env.pwd} -Q "${escapedQuery}"
                         """
                     }
