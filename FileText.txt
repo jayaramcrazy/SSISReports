@@ -29,7 +29,7 @@ pipeline {
                         echo "Processing file: ${filepath}"
 
                         def bulkInsertQuery = """
-                        INSERT health.population
+                        BULK INSERT health.population
                         FROM '${filepath}'
                         WITH (
                             FIRSTROW = 2,
