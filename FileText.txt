@@ -4,6 +4,7 @@ pipeline {
         SQLSERVER = "JAYARAM\\DEVELOPER1"
         DATABASE  = "ErrorBD"
         CSV_DIR   = "csvfile"
+        login = 'JaiLogin'
     }
 
     stages {
@@ -41,7 +42,7 @@ pipeline {
                         echo "Executing query: ${escapedQuery}"
 
                         bat """
-                        sqlcmd -S ${env.SQLSERVER} -d ${env.DATABASE} -E -Q "${escapedQuery}"
+                        sqlcmd -S ${env.SQLSERVER} -d ${env.DATABASE} -U ${env.login} -Q "${escapedQuery}"
                         """
                     }
                 }
