@@ -17,7 +17,7 @@ pipeline {
         stage('Insert CSV into SQL Server') {
             steps {
                 script {
-                    def files = findFiles(glob: '**/*.csv')
+                    def files = findFiles(glob: 'csvfile/Population.csv')
                     if (files.length == 0) {
                         echo " No CSV files found in ${env.CSV_DIR}"
                         error "No files to process"
