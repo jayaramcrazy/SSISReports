@@ -18,8 +18,10 @@ pipeline {
             steps {
                 script {
                         def bulkInsertQuery = """
+                        file = 'D:/SSISGitReports/reports/csvfile/*csv'
+                        for file in range(2):
                         BULK INSERT health.population
-                        FROM 'D:/SSISGitReports/reports/csvfile/Population1.csv'
+                        FROM ${file}
                         WITH (
                             FIRSTROW = 2,
                             FIELDTERMINATOR = ',',
