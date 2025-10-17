@@ -19,7 +19,7 @@ pipeline {
                 script {
                         def bulkInsertQuery = """
                         BULK INSERT health.population
-                        FROM 'D:/SSISGitReports/reports/csvfile/Population.csv'
+                        FROM 'D:/SSISGitReports/reports/csvfile/*.csv'
                         WITH (
                             FIRSTROW = 2,
                             FIELDTERMINATOR = ',',
