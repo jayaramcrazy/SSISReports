@@ -15,7 +15,7 @@ pipeline{
             steps{
                 script{
 <<<<<<< HEAD
-                    def csvFiles = findFiles(glob: "${env.CSV_files}/*.csv")
+                    def csvFiles = findFiles(glob: "${env.CSV_DIR}/*.csv")
                     if (csvFiles.length) == 0{
                         echo "No file found in ${env.CSV_DIR}"
 =======
