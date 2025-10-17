@@ -17,10 +17,10 @@ pipeline {
             steps {
                 script {
                     // Locate the CSV file in the repo
-                    def csvFile = findFiles("/csvfile/Population.csv")
+                    def csvFile = findFiles("csvfile/Population.csv")
 
                     if (!csvFile.exists()) {
-                        error "❌ CSV file not found at csvfile/Population.csv"
+                        error "❌ CSV file not found at ${csvfile/Population.csv}"
                     }
 
                     def lines = csvFile.readLines()
