@@ -17,7 +17,7 @@ pipeline {
             steps {
                 script {
                     // Locate the CSV file in the repo
-                    def csvFile = new File("csvfile/Population.csv")
+                    def csvFile = findFile("D:/SSISGitReports/reports/csvfile/Population.csv")
 
                     if (!csvFile.exists()) {
                         error "❌ CSV file not found at csvfile/Population.csv"
