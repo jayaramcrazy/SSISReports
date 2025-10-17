@@ -3,7 +3,7 @@ pipeline {
     environment {
         SQLSERVER = "JAYARAM\\DEVELOPER1"
         DATABASE  = "ErrorBD"
-        CSV_DIR   = "csvfile/*.csv"
+        CSV_DIR   = 'C:\ProgramData\Jenkins\.jenkins\workspace\SSISReports\csvfile\Population1.csv'
         login = 'JaiLogin'
         pwd = 'Jayaram@300'
     }
