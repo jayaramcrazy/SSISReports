@@ -4,7 +4,7 @@ pipeline {
         SQLSERVER = "JAYARAM\\DEVELOPER1"
         DATABASE  = "ErrorDB"
         CSV_DIR   = "csvfile"
-        SQLUSER   = "JAYARAM\\JaiRam"
+        SQLUSER   = "JaiLogin"
         SQLPASS   = "Jayaram300"
     }
 
