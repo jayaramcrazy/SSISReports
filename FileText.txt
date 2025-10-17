@@ -27,18 +27,11 @@ pipeline {
                         def filepath = file.path.replace("/", "\\")
                         echo "Processing file: ${filepath}"
 
-                        def bulkInsertQuery = """
-                        BULK INSERT health.population
-                        FROM '${filepath}'
-                        WITH (
-                            FIRSTROW = 2,
-                            FIELDTERMINATOR = ',',
-                            ROWTERMINATOR = '\\n',
-                            TABLOCK
-                        );
+                        def InsertQuery = """
+                        INSERT health.population
+                        FROM '${filepath}'                       
                         """
-                        def escapedQuery = bulkInsertQuery.replace('"', '\\"').replace('\n', ' ')
-
+                        def escapedQuery = InsertQuery.replace('"', '\\"').replace('\n', ' ')
                         echo "Executing query: ${escapedQuery}"
                         bat """
                         copy csvfile\\Population1.csv C:\\Temp\\Population1.csv
