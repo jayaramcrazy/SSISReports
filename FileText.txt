@@ -1,35 +1,34 @@
 pipeline {
     agent any
-
     environment {
-        SQLSERVER = "DEVELOPER1"
+        SQLSERVER = "JAYARAM\\DEVELOPER1"   // Use your real instance
         DATABASE  = "ErrorDB"
         CSV_DIR   = 'csvfile'
     }
 
     stages {
-        stage('checkout code from github') {
+        stage('Checkout code from GitHub') {
             steps {
                 checkout scm
             }
         }
 
-        stage('Inserting csv into sql server') {
+        stage('Insert CSV into SQL Server') {
             steps {
                 script {
                     def files = findFiles(glob: "${env.CSV_DIR}/*.csv")
                     if (files.length == 0) {
-                        echo "No file found in ${env.CSV_DIR}"
+                        echo " No CSV files found in ${env.CSV_DIR}"
                         error "No files to process"
                     }
 
                     for (file in files) {
                         def filepath = file.path.replace("/", "\\")
-                        echo "Processing csv file: ${filepath}"
+                        echo "Processing file: ${filepath}"
 
-                        //  Define the bulk insert query BEFORE using it
+                        // Define bulk insert query correctly here
                         def bulkInsertQuery = """
-                        BULK INSERT ErrorBD.dbo.population
+                        BULK INSERT dbo.population
                         FROM '${filepath}'
                         WITH (
                             FIRSTROW = 2,
@@ -39,11 +38,11 @@ pipeline {
                         );
                         """
 
-                        echo "Executing query: ${bulkInsertQuery}"
+                        echo "Executing query:\n${bulkInsertQuery}"
 
-                        // Run SQLCMD command
+                        // Run SQL query inside SQLCMD properly
                         bat """
-                        sqlcmd -S ${env.SQLSERVER} -d ${env.DATABASE} -E -Q "${bulkInsertQuery}"
+                        sqlcmd -S ${env.SQLSERVER} -d ${env.DATABASE} -E -Q "${bulkInsertQuery.replace('"', '\\"')}"
                         """
                     }
                 }
