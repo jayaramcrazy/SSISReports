@@ -3,7 +3,6 @@ pipeline {
     environment {
         SQLSERVER = "JAYARAM\\DEVELOPER1"
         DATABASE  = "ErrorBD"
-        CSV_DIR   = "D:/SSISGitReports/reports/csvfile/Population.csv"
         login = 'JaiLogin'
         pwd = 'Jayaram@300'
     }
@@ -18,21 +17,9 @@ pipeline {
         stage('Insert CSV into SQL Server') {
             steps {
                 script {
-                    def files = findFiles(glob: "${env.CSV_DIR}")
-                    if (files.length == 0) {
-                        echo " No CSV files found in ${env.CSV_DIR}"
-                        error "No files to process"
-                        def fullpath = ${files.path}
-                         echo "Full path ${fullpath}"
-                    }
-
-                    for (file in files) {
-                        def filepath = file.path.replace("/", "\\")
-                        echo "Processing file: ${filepath}"
-
                         def bulkInsertQuery = """
                         BULK INSERT health.population
-                        FROM '${filepath}'
+                        FROM 'D:/SSISGitReports/reports/csvfile/Population.csv'
                         WITH (
                             FIRSTROW = 2,
                             FIELDTERMINATOR = ',',
@@ -52,4 +39,4 @@ pipeline {
             }
         }
     }
-}
+
