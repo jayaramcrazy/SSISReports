@@ -1,7 +1,7 @@
 pipeline{
     agent any
     environment{
-        SQL SERVER = "DEVELOPER1"
+        SQLSERVER = "DEVELOPER1"
         DATABASE = "ErrorDB"
         CSV_DIR = "csv_files"
     }
