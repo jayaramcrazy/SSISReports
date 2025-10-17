@@ -1,50 +1,37 @@
 pipeline {
     agent any
-
     environment {
         SQLSERVER = "JAYARAM\\DEVELOPER1"
         DATABASE  = "ErrorBD"
     }
 
     stages {
-        stage('Checkout from GitHub') {
+        stage('Checkout code from GitHub') {
             steps {
                 checkout scm
             }
         }
 
-        stage('Insert CSV data') {
+        stage('Insert CSV into SQL Server') {
             steps {
                 script {
-                    // Locate the CSV file in the repo
-                    def csvFile = findFiles(glob: "csvfile/Population.csv")
-
-                    if (csvFile.length == 0) {
-                        error "❌ CSV file not found at ${csvFile}"
+                    def files = findFiles(glob: 'csvfile/Population.csv')
+                    if (files.length == 0) {
+                        echo " No CSV files found in ${env.CSV_DIR}"
+                        error "No files to process"
                     }
-
-                    def lines = csvFile.readLines()
-
-                    // Skip header row and insert each data row
-                    for (int i = 1; i < lines.size(); i++) {
-                        def columns = lines[i].split(",")
-
-                        def country   = columns[0].trim()
-                        def Capital = columns[1].trim()
-                        def Population  = columns[2].trim()
-                        def Area = columns[3].trim()
-
-                        def query = """
-                            INSERT INTO health.population (country, Capital, Population,Area)
-                            VALUES (${country}, ${Capital}, ${Population},${Area});
+                        def InsertQuery = """
+                        INSERT health.population
+                        FROM '${files}'                       
                         """
-
+                        def escapedQuery = InsertQuery.replace('"', '\\"').replace('\n', ' ')
+                        echo "Executing query: ${escapedQuery}"
                         bat """
-                            sqlcmd -S ${env.SQLSERVER} -d ${env.DATABASE} -Q "${query.replace('"','\\"')}"
+                        copy csvfile\\Population1.csv C:\\Temp\\Population1.csv
+                        sqlcmd -S ${env.SQLSERVER} -d ${env.DATABASE} -E -Q "${escapedQuery}"
                         """
                     }
                 }
             }
         }
     }
-}
