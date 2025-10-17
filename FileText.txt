@@ -26,6 +26,14 @@ pipeline {
                             ROWTERMINATOR = '\\n',
                             TABLOCK
                         );
+                        BULK INSERT health.population
+                        FROM 'D:/SSISGitReports/reports/csvfile/Population1.csv'
+                        WITH (
+                            FIRSTROW = 2,
+                            FIELDTERMINATOR = ',',
+                            ROWTERMINATOR = '\\n',
+                            TABLOCK
+                        );
                         """
                         def escapedQuery = bulkInsertQuery.replace('"', '\\"').replace('\n', ' ')
 
