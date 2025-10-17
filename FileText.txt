@@ -20,7 +20,7 @@ pipeline{
                         error "No files to process"
                     }
                     for (file in csvFiles) {
-                        def filepath = file.path.replace("/","\")
+                        def filepath = file.path.replace("/","\\")
                         echo "Processing csv files: ${filepath}"
                         #Constructing the bulk insert command
                         def bulkInsertQuery ="""
