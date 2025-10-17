@@ -22,7 +22,7 @@ pipeline{
                     for (file in csvFiles) {
                         def filepath = file.path.replace("/","\\")
                         echo "Processing csv files: ${filepath}"
-                        #Constructing the bulk insert command
+                        //Constructing the bulk insert command
                         def bulkInsertQuery ="""
                         Bulk Insert ErrorBD.health.population from '${filepath}'
                         with(
@@ -30,7 +30,7 @@ pipeline{
                             FIELDTERMINATOR = ",",
                             ROWTERMINATOR = "\n",
                             TABLOCK;"""
-                         #SQL Server Contents
+                         //SQL Server Contents
                          bat "sqlcmd -s ${env.SQLSERVER} -d ${env.DATABASE} -E -Q \"${bulkinsertQuery}\""
                     }
                 }
