@@ -1,9 +1,9 @@
 pipeline{
     agent any
     environment{
-        SQL SERVER = "DEVELOPER1"
+        SQLSERVER = "DEVELOPER1"
         DATABASE = "ErrorDB"
-        CSV_DIR = "csv_files"
+        CSV_DIR = 'csvfile'
     }
     stages{
         stage('checkout code from github'){
@@ -14,15 +14,21 @@ pipeline{
         stage('Inserting csv into sql server'){
             steps{
                 script{
+<<<<<<< HEAD
                     def csvFiles = findFiles(glob: "${env.CSV_files}/*.csv")
                     if (csvFiles.length) == 0{
                         echo "No file found in ${env.CSV_DIR}"
+=======
+                    def csvFiles = findFiles(glob: 'CSV_DIR/*.csv')
+                    if (csvFiles.length == 0){
+                        echo "No file found in ${CSV_DIR}"
+>>>>>>> 2bebfa9b95c95706a333e56248e4784a75305089
                         error "No files to process"
                     }
                     for (file in csvFiles) {
-                        def filepath = file.path.replace("/","\")
+                        def filepath = file.path.replace("/","\\")
                         echo "Processing csv files: ${filepath}"
-                        #Constructing the bulk insert command
+                        //Constructing the bulk insert command
                         def bulkInsertQuery ="""
                         Bulk Insert ErrorBD.health.population from '${filepath}'
                         with(
@@ -30,11 +36,12 @@ pipeline{
                             FIELDTERMINATOR = ",",
                             ROWTERMINATOR = "\n",
                             TABLOCK;"""
-                         #SQL Server Contents
+                         //SQL Server Contents
                          bat "sqlcmd -s ${env.SQLSERVER} -d ${env.DATABASE} -E -Q \"${bulkinsertQuery}\""
                     }
                 }
             }
             
     }
+}
 }
