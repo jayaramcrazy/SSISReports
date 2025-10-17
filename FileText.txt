@@ -16,10 +16,7 @@ pipeline{
                 script{
                     def files = findFiles(glob: "${env.CSV_DIR}/*.csv")
                     if (files.length == 0){
-                        echo "No file found in ${env.CSV_DIR}"
-                    def files = findFiles(glob: 'CSV_DIR/*.csv')
-                    if (files.length == 0){
-                        echo "No file found in ${CSV_DIR}"
+                        echo "No file found in ${env.CSV_DIR}"                    
                         error "No files to process"
                     }
                     for (file in files) {
