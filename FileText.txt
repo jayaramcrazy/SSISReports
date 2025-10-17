@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         SQLSERVER = "JAYARAM\\DEVELOPER1"
-        DATABASE  = "ErrorDB"
+        DATABASE  = "ErrorBD"
         CSV_DIR   = "csvfile"
         SQLUSER   = "JaiLogin"
         SQLPASS   = "Jayaram300"
