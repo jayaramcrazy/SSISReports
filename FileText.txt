@@ -14,15 +14,15 @@ pipeline{
         stage('Inserting csv into sql server'){
             steps{
                 script{
-<<<<<<< HEAD
+//<<<<<<< HEAD
                     def csvFiles = findFiles(glob: "${env.CSV_DIR}/*.csv")
                     if (csvFiles.length) == 0{
                         echo "No file found in ${env.CSV_DIR}"
-=======
+//=======
                     def csvFiles = findFiles(glob: 'CSV_DIR/*.csv')
                     if (csvFiles.length == 0){
                         echo "No file found in ${CSV_DIR}"
->>>>>>> 2bebfa9b95c95706a333e56248e4784a75305089
+//>>>>>>> 2bebfa9b95c95706a333e56248e4784a75305089
                         error "No files to process"
                     }
                     for (file in csvFiles) {
