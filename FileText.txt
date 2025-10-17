@@ -3,7 +3,7 @@ pipeline{
     environment{
         SQLSERVER = "DEVELOPER1"
         DATABASE = "ErrorDB"
-        CSV_DIR = 'SSISreports/'
+        CSV_DIR = 'Population.csv'
     }
     stages{
         stage('checkout code from github'){
@@ -14,7 +14,7 @@ pipeline{
         stage('Inserting csv into sql server'){
             steps{
                 script{
-                    def csvFiles = findFiles(glob: "${env.CSV_files}/*.csv")
+                    def csvFiles = findFiles(glob: "${env.CSV_DIR}/*.csv")
                     if (csvFiles.length == 0){
                         echo "No file found in ${env.CSV_DIR}"
                         error "No files to process"
