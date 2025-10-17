@@ -1,47 +1,53 @@
-pipeline{
+pipeline {
     agent any
-    environment{
-        SQLSERVER = "DEVELOPER1"
-        DATABASE = "ErrorDB"
-        CSV_DIR = 'csvfile'
+    environment {
+        SQLSERVER = "JAYARAM\\DEVELOPER1"
+        DATABASE  = "ErrorBD"
+        CSV_DIR   = "csvfile/*.csv"
+        login = 'JaiLogin'
+        pwd = 'Jayaram@300'
     }
-    stages{
-        stage('checkout code from github'){
-            steps{
+
+    stages {
+        stage('Checkout code from GitHub') {
+            steps {
                 checkout scm
             }
         }
-        stage('Inserting csv into sql server'){
-            steps{
-                script{
-<<<<<<< HEAD
-                    def csvFiles = findFiles(glob: "${env.CSV_files}/*.csv")
-                    if (csvFiles.length) == 0{
-                        echo "No file found in ${env.CSV_DIR}"
-=======
-                    def csvFiles = findFiles(glob: 'CSV_DIR/*.csv')
-                    if (csvFiles.length == 0){
-                        echo "No file found in ${CSV_DIR}"
->>>>>>> 2bebfa9b95c95706a333e56248e4784a75305089
+
+        stage('Insert CSV into SQL Server') {
+            steps {
+                script {
+                    def files = findFiles(glob: "${env.CSV_DIR}")
+                    if (files.length == 0) {
+                        echo " No CSV files found in ${env.CSV_DIR}"
                         error "No files to process"
                     }
-                    for (file in csvFiles) {
-                        def filepath = file.path.replace("/","\\")
-                        echo "Processing csv files: ${filepath}"
-                        //Constructing the bulk insert command
-                        def bulkInsertQuery ="""
-                        Bulk Insert ErrorBD.health.population from '${filepath}'
-                        with(
-                            FIRSTROW =2,
-                            FIELDTERMINATOR = ",",
-                            ROWTERMINATOR = "\n",
-                            TABLOCK;"""
-                         //SQL Server Contents
-                         bat "sqlcmd -s ${env.SQLSERVER} -d ${env.DATABASE} -E -Q \"${bulkinsertQuery}\""
+
+                    for (file in files) {
+                        def filepath = file.path.replace("/", "\\")
+                        echo "Processing file: ${filepath}"
+
+                        def bulkInsertQuery = """
+                        BULK INSERT health.population
+                        FROM '${filepath}'
+                        WITH (
+                            FIRSTROW = 2,
+                            FIELDTERMINATOR = ',',
+                            ROWTERMINATOR = '\\n',
+                            TABLOCK
+                        );
+                        """
+                        def escapedQuery = bulkInsertQuery.replace('"', '\\"').replace('\n', ' ')
+
+                        echo "Executing query: ${escapedQuery}"
+
+                        bat """
+                        sqlcmd -S ${env.SQLSERVER} -d ${env.DATABASE} -U ${env.login} -P ${env.pwd} -Q "${escapedQuery}"
+                        """
                     }
                 }
             }
-            
+        }
     }
-}
 }
