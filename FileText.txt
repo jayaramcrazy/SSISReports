@@ -3,7 +3,7 @@ pipeline {
     environment {
         SQLSERVER = "JAYARAM\\DEVELOPER1"
         DATABASE  = "ErrorBD"
-        CSV_DIR   = "**/*.csv"
+        CSV_DIR   =readFile("**/*.csv")
         login = 'JaiLogin'
         pwd = 'Jayaram@300'
     }
