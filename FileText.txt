@@ -1,9 +1,11 @@
 pipeline {
     agent any
     environment {
-        SQLSERVER = "JAYARAM\\DEVELOPER1"   // Use your real instance
+        SQLSERVER = "JAYARAM\\DEVELOPER1"
         DATABASE  = "ErrorDB"
-        CSV_DIR   = 'csvfile'
+        CSV_DIR   = "csvfile"
+        SQLUSER   = "Jai Ram"
+        SQLPASS   = "Jayaram300"
     }
 
     stages {
@@ -26,7 +28,6 @@ pipeline {
                         def filepath = file.path.replace("/", "\\")
                         echo "Processing file: ${filepath}"
 
-                        // Define bulk insert query correctly here
                         def bulkInsertQuery = """
                         BULK INSERT dbo.population
                         FROM '${filepath}'
@@ -37,12 +38,12 @@ pipeline {
                             TABLOCK
                         );
                         """
+                        def escapedQuery = bulkInsertQuery.replace('"', '\\"').replace('\n', ' ')
 
-                        echo "Executing query:\n${bulkInsertQuery}"
+                        echo "Executing query: ${escapedQuery}"
 
-                        // Run SQL query inside SQLCMD properly
                         bat """
-                        sqlcmd -S ${env.SQLSERVER} -d ${env.DATABASE} -E -Q "${bulkInsertQuery.replace('"', '\\"')}"
+                        sqlcmd -S ${env.SQLSERVER} -d ${env.DATABASE} -U ${env.SQLUSER} -P ${env.SQLPASS} -Q "${escapedQuery}"
                         """
                     }
                 }
