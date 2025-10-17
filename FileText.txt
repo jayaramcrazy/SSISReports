@@ -3,7 +3,7 @@ pipeline{
     environment{
         SQLSERVER = "DEVELOPER1"
         DATABASE = "ErrorDB"
-        CSV_DIR = "SSISReports/blob/main/FileText.txt"
+        CSV_DIR = "Population.csv"
     }
     stages{
         stage('checkout code from github'){
