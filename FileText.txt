@@ -22,14 +22,9 @@ pipeline {
                         echo " No CSV files found in ${env.CSV_DIR}"
                         error "No files to process"
                     }
-
-                    for (file in files) {
-                        def filepath = file.path.replace("/", "\\")
-                        echo "Processing file: ${filepath}"
-
                         def InsertQuery = """
                         INSERT health.population
-                        FROM '${filepath}'                       
+                        FROM '${files}'                       
                         """
                         def escapedQuery = InsertQuery.replace('"', '\\"').replace('\n', ' ')
                         echo "Executing query: ${escapedQuery}"
