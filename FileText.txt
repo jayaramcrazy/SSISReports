@@ -31,7 +31,7 @@ pipeline{
                             ROWTERMINATOR = "\n",
                             TABLOCK;"""
                          //SQL Server Contents
-                         sql.execute(bulkinsertQuery)
+                         echo "Executing query: ${bulkinsertQuery}"
                          bat "sqlcmd -s ${env.SQLSERVER} -d ${env.DATABASE} -E -Q \"${bulkinsertQuery}\""
                     }
                 }
