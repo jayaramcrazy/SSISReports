@@ -3,7 +3,7 @@ pipeline {
     environment {
         SQLSERVER = "JAYARAM\\DEVELOPER1"
         DATABASE  = "ErrorBD"
-        CSV_DIR   =readFile("csvfile.csv")
+        CSV_DIR   =readFile("csvfile/")
         login = 'JaiLogin'
         pwd = 'Jayaram@300'
     }
@@ -22,6 +22,8 @@ pipeline {
                     if (files.length == 0) {
                         echo " No CSV files found in ${env.CSV_DIR}"
                         error "No files to process"
+                        def fullpath = ${files.path}
+                         echo "Full path ${fullpath}"
                     }
 
                     for (file in files) {
