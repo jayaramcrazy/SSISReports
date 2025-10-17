@@ -3,6 +3,9 @@ pipeline {
     environment {
         SQLSERVER = "JAYARAM\\DEVELOPER1"
         DATABASE  = "ErrorBD"
+        CSV_DIR   = "csvfile/*.csv"
+        login = 'JaiLogin'
+        pwd = 'Jayaram@300'
     }
 
     stages {
@@ -15,23 +18,36 @@ pipeline {
         stage('Insert CSV into SQL Server') {
             steps {
                 script {
-                    def files = findFiles(glob: 'csvfile/Population.csv')
+                    def files = findFiles(glob: "${env.CSV_DIR}")
                     if (files.length == 0) {
                         echo " No CSV files found in ${env.CSV_DIR}"
                         error "No files to process"
                     }
-                        def InsertQuery = """
-                        INSERT health.population
-                        FROM '${files}'                       
+
+                    for (file in files) {
+                        def filepath = file.path.replace("/", "\\")
+                        echo "Processing file: ${filepath}"
+
+                        def bulkInsertQuery = """
+                        BULK INSERT health.population
+                        FROM '${filepath}'
+                        WITH (
+                            FIRSTROW = 2,
+                            FIELDTERMINATOR = ',',
+                            ROWTERMINATOR = '\\n',
+                            TABLOCK
+                        );
                         """
-                        def escapedQuery = InsertQuery.replace('"', '\\"').replace('\n', ' ')
+                        def escapedQuery = bulkInsertQuery.replace('"', '\\"').replace('\n', ' ')
+
                         echo "Executing query: ${escapedQuery}"
+
                         bat """
-                        copy csvfile\\Population1.csv C:\\Temp\\Population1.csv
-                        sqlcmd -S ${env.SQLSERVER} -d ${env.DATABASE} -E -Q "${escapedQuery}"
+                        sqlcmd -S ${env.SQLSERVER} -d ${env.DATABASE} -U ${env.login} -P ${env.pwd} -Q "${escapedQuery}"
                         """
                     }
                 }
             }
         }
     }
+}
