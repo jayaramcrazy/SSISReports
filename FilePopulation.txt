@@ -24,7 +24,7 @@ ROWTERMINATOR = "\n",
 TABLOCK
 );
 """
-def escquary = builkinsert.replace('"',"\\").replace('n',' ').trim()
+def escquary = builkinsert.replace('\n',' ').trim()
 echo " Executing query ${escquary}"
 bat """
 sqlcmd -S ${SQLSERVER} -d ${DATABASE} -U ${user} -P ${pwd} -Q "${escquary}"
