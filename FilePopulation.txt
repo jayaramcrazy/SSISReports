@@ -6,7 +6,6 @@ pipeline {
         DATABASE  = 'ErrorBD'
         login     = 'JaiLogin'
         pwd       = 'Jayaram@300'
-        CSV_DIR   = 'csvfile'
     }
 
     stages {
@@ -19,17 +18,9 @@ pipeline {
         stage('Insert files into SQL Server') {
             steps {
                 script {
-                    // 🔹 Find all CSV files in the folder
-                    def csvFiles = findFiles(glob: "${env.CSV_DIR}/*.csv")
-
-                    if (csvFiles.length == 0) {
-                        echo "❌ No CSV files found in ${env.CSV_DIR}"
-                    } else {
-                        csvFiles.each { file ->
-                            def filePath = file.path.replace('\\', '\\\\')  // escape for SQL
-                            def bulkQuery = """
+                def bulkQuery = """
 BULK INSERT health.Population
-FROM '${filePath}'
+FROM 'D:\\SSISGitReport1\\csvfile\\Population.csv'
 WITH (
     FIRSTROW = 2,
     FIELDTERMINATOR = ',',
