@@ -25,7 +25,7 @@ pipeline{
     ROWTERMINATOR = '\n',
     TABBLOCK);
     """
-    def escaped_query = bulkinsertquery.replace(',','\\').replace('\n',' ').trim()
+    def escaped_query = bulkinsertquery.replace('"','\\').replace('\n',' ').trim()
     echo 'Executing query ${bulkinsertquery}'
     bat """
     sqlcmd -S ${env.SQLSERVER} -d ${env.DATABASE} -U ${env.login} -P "${env.pwd}" -Q "${escaped_query}"
