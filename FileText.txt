@@ -23,7 +23,8 @@ pipeline{
     FIRSTROW = 2, 
     FIELDTERMINATOR = ',', 
     ROWTERMINATOR = '\n',
-    TABBLOCK);
+    TABBLOCK
+    );
     """
     def escaped_query = bulkinsertquery.replace('"','\\').replace('\n',' ').trim()
     echo 'Executing query ${bulkinsertquery}'
