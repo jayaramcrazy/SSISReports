@@ -29,7 +29,7 @@ WITH (
 );
 """
                             def escapedQuery = bulkQuery.replace("\n", " ").trim()
-                            echo "📥 Inserting data from: ${filePath}"
+                            echo "Starting file processing"
                             bat """
                             sqlcmd -S ${env.SQLSERVER} -d ${env.DATABASE} -U ${env.login} -P "${env.pwd}" -Q "${escapedQuery}"
                             """
