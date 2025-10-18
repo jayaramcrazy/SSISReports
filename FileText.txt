@@ -1,7 +1,7 @@
 pipeline{
   agent any
     environment{
-          SQLSERVER='JAYARAM\\DDEVELOPER1'
+          SQLSERVER = 'JAYARAM\\DEVELOPER1'
           DATABASE = 'ErrorBD'
           login = 'JaiLogin'
           pwd = 'Jayaram@300'
