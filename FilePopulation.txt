@@ -1,43 +1,51 @@
-pipeline{
- agent any
-  environment{
-  SQLSERVER = "JAYARAM\\DEVELOPER1"
-  DATABASE = "ErrorBD"
-  user = "Jailogin"
-  pwd = "Jayaram@300"
- }
-stages{
-stage("Checkout from git"){
-steps{
-checkout scm
-}
-}
-stage("Insert files into sql server"){
-steps {
-script{
-def builkinsert = """
-BULK INSERT health.Population from 'D:\\SSISGitReport1\\csvfile\\Population.csv'
-WITH(
-FIRSTROW = 2,
-FIELDTERMINATOR = ',',
-ROWTERMINATOR = '\n',
-TABLOCK
+pipeline {
+    agent any
+
+    environment {
+        SQLSERVER = 'JAYARAM\\DEVELOPER1'
+        DATABASE  = 'ErrorBD'
+        login     = 'JaiLogin'
+        pwd       = 'Jayaram@300'
+        CSV_DIR   = 'D:\\SSISGitReport1\\csvfile'
+    }
+
+    stages {
+        stage('Checkout code from GitHub') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Insert files into SQL Server') {
+            steps {
+                script {
+                    // 🔹 Find all CSV files in the folder
+                    def csvFiles = findFiles(glob: "${env.CSV_DIR}/*.csv")
+
+                    if (csvFiles.length == 0) {
+                        echo "❌ No CSV files found in ${env.CSV_DIR}"
+                    } else {
+                        csvFiles.each { file ->
+                            def filePath = file.path.replace('\\', '\\\\')  // escape for SQL
+                            def bulkQuery = """
+BULK INSERT health.Population
+FROM '${filePath}'
+WITH (
+    FIRSTROW = 2,
+    FIELDTERMINATOR = ',',
+    ROWTERMINATOR = '\\n',
+    TABLOCK
 );
 """
-def escquary = builkinsert.replace('\n',' ').trim()
-echo " Executing query ${escquary}"
-bat """
-sqlcmd -S ${SQLSERVER} -d ${DATABASE} -U ${user} -P ${pwd} -Q "${escquary}"
-"""
+                            def escapedQuery = bulkQuery.replace("\n", " ").trim()
+                            echo "📥 Inserting data from: ${filePath}"
+                            bat """
+                            sqlcmd -S ${env.SQLSERVER} -d ${env.DATABASE} -U ${env.login} -P "${env.pwd}" -Q "${escapedQuery}"
+                            """
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
-}
-}
-}
-}
-
-
-
-
-
-
-
