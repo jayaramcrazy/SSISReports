@@ -19,7 +19,12 @@ pipeline{
     script{
     def bulkinsertquery = """
     BULK INSERT health.Population from 'D:\\SSISGitReport1\\Files\\filepopulation.csv'
-    with( Firstrow = 2, FieldTerminator = ',', RowTerminator = '\\n', TABBLOCK);"""
+    with(
+    Firstrow = 2, 
+    FieldTerminator = ',', 
+    RowTerminator = '\\n',
+    TABBLOCK);
+    """
     def escaped_query = bulkinsertquery.replace(',','\\').replace('n','')
     echo 'Executing query ${bulkinsertquery}'
     bat """
