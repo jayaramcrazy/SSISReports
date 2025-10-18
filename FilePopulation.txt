@@ -6,7 +6,7 @@ pipeline {
         DATABASE  = 'ErrorBD'
         login     = 'JaiLogin'
         pwd       = 'Jayaram@300'
-        CSV_DIR   = 'D:\\SSISGitReport1\\csvfile'
+        CSV_DIR   = 'csvfile/*.csv'
     }
 
     stages {
