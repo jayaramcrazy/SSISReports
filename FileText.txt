@@ -28,7 +28,7 @@ pipeline{
     def escaped_query = bulkinsertquery.replace(',','\\').replace('n','')
     echo 'Executing query ${bulkinsertquery}'
     bat """
-    sqlcmd -S ${env.SQLSERVER} -d ${env.DATABASE} -U ${env.login} -P ${env.pwd} -Q "${escaped_query}"
+    sqlcmd -S ${env.SQLSERVER} -d ${env.DATABASE} -U ${env.login} -P ${env.pwd} -Q $"{escaped_query}"
     """
     }
     }
