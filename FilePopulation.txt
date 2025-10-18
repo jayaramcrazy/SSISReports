@@ -27,6 +27,14 @@ WITH (
     ROWTERMINATOR = '\\n',
     TABLOCK
 );
+BULK INSERT health.Population
+FROM 'D:\\SSISGitReport1\\csvfile\\Population1.csv'
+WITH (
+    FIRSTROW = 2,
+    FIELDTERMINATOR = ',',
+    ROWTERMINATOR = '\\n',
+    TABLOCK
+);
 """
                             def escapedQuery = bulkQuery.replace("\n", " ").trim()
                             echo "Starting file processing"
