@@ -19,6 +19,7 @@ def builkinsert = """
 BULK INSERT health.Population from 'D:\\SSISGitReport1\\Files\\filepopulation.csv'
 WITH(
 FIRSTROW = 2,
+FIELDTERMINATOR = ',',
 ROWTERMINATOR = '\n',
 TABLOCK
 );
