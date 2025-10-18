@@ -10,9 +10,11 @@ stages{
 stage("Checkout from git"){
 steps{
 checkout scm
-{
+}
 }
 stage("Insert files into sql server"){
+steps {
+script{
 def builkinsert = """
 BULK INSERT health.Population from 'D:\\SSISGitReport1\\Files\\filepopulation.csv'
 WITH(
@@ -25,12 +27,17 @@ TABLOCK
 def escquary = builkinsert.replace('"',"\\").replace('\n',' ').trim()
 echo " Executing query ${escquary}"
 bat """
-sqlcmd -S ${SQLSERVER} -d ${DATABASE} -U $user} -P ${pwd} -Q "${escquary}"
+sqlcmd -S ${SQLSERVER} -d ${DATABASE} -U ${user} -P ${pwd} -Q "${escquary}"
 """
 }
 }
 }
 }
+}
+
+
+
+
 
 
 
