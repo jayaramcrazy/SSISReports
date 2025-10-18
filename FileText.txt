@@ -19,7 +19,7 @@ pipeline{
     script{
     def bulkinsertquery = """
     BULK INSERT health.Population from 'D:\\SSISGitReport1\\Files\\filepopulation.csv'
-    with(
+    WITH(
     FIRSTROW = 2, 
     FIELDTERMINATOR = ',', 
     ROWTERMINATOR = '\\n',
