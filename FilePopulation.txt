@@ -17,6 +17,9 @@ steps {
 script{
 def builkinsert = """
 path = 'D:\\SSISGitReport1\\csvfile\*.csv'
+if (path.length == 0){
+echo 'NO FILES IN PATH : ${path}'
+}
 BULK INSERT health.Population from ${path}
 WITH(
 FIRSTROW = 2,
