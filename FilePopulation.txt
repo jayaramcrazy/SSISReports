@@ -16,7 +16,7 @@ stage("Insert files into sql server"){
 steps {
 script{
 def builkinsert = """
-path = 'D:\\SSISGitReport1\\csvfile\*.csv'
+path = 'D:\\SSISGitReport1\\csvfile\\*.csv'
 if (path.length == 0){
 echo 'NO FILES IN PATH : ${path}'
 }
