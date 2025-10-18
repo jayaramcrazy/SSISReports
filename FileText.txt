@@ -1,42 +1,47 @@
-pipeline{
-  agent any
-    environment{
-          SQLSERVER = 'JAYARAM\\DEVELOPER1'
-          DATABASE = 'ErrorBD'
-          login = 'JaiLogin'
-          pwd = 'Jayaram@300'
-     }
+pipeline {
+    agent any
 
-   stages{
-      stage('Checkout code from github'){
-      steps{
-       checkout scm
-      }
-      }
+    environment {
+        SQLSERVER = 'JAYARAM\\DEVELOPER1'
+        DATABASE  = 'ErrorBD'
+        login     = 'JaiLogin'
+        pwd       = 'Jayaram@300'
+    }
 
-    stage('Input the data into sql server'){
-    steps{
-    script{
-    def bulkinsertquery = """
-    BULK INSERT health.Population
-    FROM 'D:\SSISGitReport1\Files\filepopulation.csv'
-    WITH (
+    stages {
+        stage('Checkout code from GitHub') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Input the data into SQL Server') {
+            steps {
+                script {
+                    // ✅ 1. Proper multi-line SQL
+                    def bulkinsertquery = """
+BULK INSERT health.Population
+FROM 'D:\\SSISGitReport1\\Files\\filepopulation.csv'
+WITH (
     FIRSTROW = 2,
     FIELDTERMINATOR = ',',
     ROWTERMINATOR = '\\n',
     TABLOCK
-    );
-    """
-    def escaped_query = bulkinsertquery.replace('"','\\').replace('\n',' ').trim()
-    echo 'Executing query ${bulkinsertquery}'
-    bat """
-    sqlcmd -S ${env.SQLSERVER} -d ${env.DATABASE} -U ${env.login} -P "${env.pwd}" -Q "${escaped_query}"
-   """
-    }
-    }
-    }
+);
+"""
+
+                    // ✅ 2. Escape newlines for sqlcmd (make single line)
+                    def escaped_query = bulkinsertquery.replace("\n", " ").trim()
+
+                    // ✅ 3. Use double quotes properly in Groovy echo
+                    echo "Executing query: ${escaped_query}"
+
+                    // ✅ 4. Run the command
+                    bat """
+                    sqlcmd -S ${env.SQLSERVER} -d ${env.DATABASE} -U ${env.login} -P "${env.pwd}" -Q "${escaped_query}"
+                    """
+                }
+            }
+        }
     }
 }
-
-    
-
