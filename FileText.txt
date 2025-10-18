@@ -1,50 +1,29 @@
-pipeline {
-    agent any
-    environment {
-        SQLSERVER = "JAYARAM\\DEVELOPER1"
-        DATABASE  = "ErrorBD"
-        login = 'JaiLogin'
-        pwd = 'Jayaram@300'
-    }
+pipeline{
+  agent any
+    environment{
+          SQLSERVER='JAYARAM\\DDEVELOPER1'
+          DATABASE = 'ErrorBD'
+          login = 'JaiLogin'
+          pwd = 'Jayaram'
+     }
 
-    stages {
-        stage('Checkout code from GitHub') {
-            steps {
-                checkout scm
-            }
-        }
+   stages{
+      stage('Checkout code from github'){
+      steps{
+       checkout scm
+      }
+      }
 
-        stage('Insert CSV into SQL Server') {
-            steps {
-                script {
-                        def bulkInsertQuery = """
-                        BULK INSERT health.population
-                        FROM 'D:/SSISGitReports/reports/csvfile/Population.csv'
-                        WITH (
-                            FIRSTROW = 2,
-                            FIELDTERMINATOR = ',',
-                            ROWTERMINATOR = '\\n',
-                            TABLOCK
-                        );
-                        BULK INSERT health.population
-                        FROM 'D:/SSISGitReports/reports/csvfile/Population1.csv'
-                        WITH (
-                            FIRSTROW = 2,
-                            FIELDTERMINATOR = ',',
-                            ROWTERMINATOR = '\\n',
-                            TABLOCK
-                        );
-                        """
-                        def escapedQuery = bulkInsertQuery.replace('"', '\\"').replace('\n', ' ')
+    stage('Input the data into sql server'){
+    steps{
+    script{
+    def bulkinsertquery = """
+    BULK INSERT health.Population from 'D:\\SSISGitReport1\\Files\\filepopulation.csv'
+    with( Firstrow = 2, FieldTerminator = ',', RowTerminator = '\\n', TABBLOCK);"""
+    def escaped_query = bulkinsertquery.replace(',','\\').replace('n','')
+    echo 'Executing query ${bulkinsertquery}'
+    bat """
+    sqlcmd -S ${SQLSERVER} -D ${DATABASE} -U ${login} -P ${pwd} -Q $'{escaped_query}'"""
 
-                        echo "Executing query: ${escapedQuery}"
-
-                        bat """
-                        sqlcmd -S ${env.SQLSERVER} -d ${env.DATABASE} -U ${env.login} -P ${env.pwd} -Q "${escapedQuery}"
-                        """
-                    }
-                }
-            }
-        }
-    }
+    
 
